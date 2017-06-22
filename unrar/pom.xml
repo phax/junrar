@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.beothorn</groupId>
+	<groupId>com.helger</groupId>
 	<artifactId>junrar</artifactId>
 	<packaging>jar</packaging>
 	<version>0.7-SNAPSHOT</version>
@@ -37,14 +37,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<type>jar</type>
-			<scope>test</scope>
-			<optional>false</optional>
-		</dependency>
-		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging-api</artifactId>
 			<version>1.1</version>
@@ -54,7 +46,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-vfs2</artifactId>
-			<version>2.0</version>
+			<version>2.1</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
@@ -64,7 +56,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2.1</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -77,7 +68,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>2.3.2</version>
 						<configuration>
 							<source>${maven.compiler.source}</source>
 							<target>${maven.compiler.source}</target>
@@ -105,6 +95,6 @@
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<version>9</version>
 	</parent>
 </project>
