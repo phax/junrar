@@ -29,16 +29,14 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.provider.AbstractFileName;
 import org.apache.commons.vfs2.provider.AbstractLayeredFileProvider;
-import org.apache.commons.vfs2.provider.FileProvider;
 import org.apache.commons.vfs2.provider.LayeredFileName;
 
 /**
  * A file system provider for RAR files. Provides read-only file systems.
- * 
+ *
  * @author <a href="http://www.rogiel.com">Rogiel</a>
  */
-public class RARFileProvider extends AbstractLayeredFileProvider implements
-		FileProvider {
+public class RARFileProvider extends AbstractLayeredFileProvider {
 	/** The list of capabilities this provider supports */
 	protected static final Collection<Capability> capabilities = Collections
 			.unmodifiableCollection(Arrays.asList(new Capability[] {
@@ -58,7 +56,7 @@ public class RARFileProvider extends AbstractLayeredFileProvider implements
 	/**
 	 * Creates a layered file system. This method is called if the file system
 	 * is not cached.
-	 * 
+	 *
 	 * @param scheme
 	 *            The URI scheme.
 	 * @param file

@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.util.HashSet;
 
 import org.apache.commons.vfs2.FileName;
-import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.provider.AbstractFileName;
@@ -32,22 +31,21 @@ import com.github.junrar.rarfile.FileHeader;
 
 /**
  * A file in a RAR file system.
- * 
+ *
  * @author <a href="http://www.rogiel.com">Rogiel</a>
  */
-public class RARFileObject extends AbstractFileObject implements FileObject {
+public class RARFileObject extends AbstractFileObject <RARFileSystem> {
 	/**
 	 * The TFile.
 	 */
 	protected Archive archive;
 	protected FileHeader header;
-	@SuppressWarnings("unused")
 	private final RARFileSystem fs;
 
 	private final HashSet<String> children = new HashSet<String>();
 
-	protected RARFileObject(AbstractFileName name, Archive archive,
-			FileHeader header, RARFileSystem fs) throws FileSystemException {
+	protected RARFileObject(final AbstractFileName name, final Archive archive,
+			final FileHeader header, final RARFileSystem fs) {
 		super(name, fs);
 		this.fs = fs;
 		this.archive = archive;
@@ -75,7 +73,7 @@ public class RARFileObject extends AbstractFileObject implements FileObject {
 			if (!getType().hasChildren()) {
 				return null;
 			}
-		} catch (FileSystemException e) {
+		} catch (final FileSystemException e) {
 			// should not happen as the type has already been cached.
 			throw new RuntimeException(e);
 		}
@@ -103,18 +101,18 @@ public class RARFileObject extends AbstractFileObject implements FileObject {
 
 	/**
 	 * Attaches a child.
-	 * 
+	 *
 	 * @param childName
 	 *            The name of the child.
 	 */
-	public void attachChild(FileName childName) {
+	public void attachChild(final FileName childName) {
 		children.add(childName.getBaseName());
 	}
 
 	/**
 	 * @param header
 	 */
-	public void setHeader(FileHeader header) {
+	public void setHeader(final FileHeader header) {
 		this.header = header;
 	}
 }
