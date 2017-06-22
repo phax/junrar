@@ -5,27 +5,27 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
- * 
+ *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.unpack.ppm;
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
 public class SEE2Context {
 	public static final int size = 4;
-	
+
     // ushort Summ;
 	private int summ;
 
@@ -35,14 +35,14 @@ public class SEE2Context {
     // byte Count;
 	private int count;
 
-	public void init(int initVal) {
+	public void init(final int initVal) {
 		shift = (ModelPPM.PERIOD_BITS - 4)&0xff;
 		summ = (initVal << shift)&0xffff;
 		count = 4;
 	}
 
     public int getMean() {
-        int retVal = summ >>> shift;
+        final int retVal = summ >>> shift;
 		summ -= retVal;
 		return retVal + ((retVal == 0) ? 1 : 0);
 	}
@@ -61,7 +61,7 @@ public class SEE2Context {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(final int count) {
 		this.count = count&0xff;
 	}
 
@@ -69,7 +69,7 @@ public class SEE2Context {
 		return shift;
 	}
 
-	public void setShift(int shift) {
+	public void setShift(final int shift) {
 		this.shift = shift&0xff;
 	}
 
@@ -77,16 +77,17 @@ public class SEE2Context {
 		return summ;
 	}
 
-	public void setSumm(int summ) {
+	public void setSumm(final int summ) {
 		this.summ = summ&0xffff;
 	}
 
-    public void incSumm(int dSumm) {
+    public void incSumm(final int dSumm) {
         setSumm(getSumm() + dSumm);
     }
 
+    @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("SEE2Context[");
         buffer.append("\n  size=");
         buffer.append(size);

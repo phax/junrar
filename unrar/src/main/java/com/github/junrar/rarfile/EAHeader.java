@@ -5,21 +5,18 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
  *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.rarfile;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.github.junrar.io.Raw;
 
@@ -28,27 +25,25 @@ import com.github.junrar.io.Raw;
  * extended archive CRC header
  *
  */
-public class EAHeader 
-extends SubBlockHeader 
+public class EAHeader
+extends SubBlockHeader
 {
-	private Log logger = LogFactory.getLog(getClass());
-	
 	public static final short EAHeaderSize = 10;
-	
-	private int unpSize;
-	private byte unpVer;
-	private byte method;
-	private int EACRC;
-	
-	public EAHeader(SubBlockHeader sb, byte[] eahead)
+
+	private final int unpSize;
+	private final byte unpVer;
+	private final byte method;
+	private final int EACRC;
+
+	public EAHeader(final SubBlockHeader sb, final byte[] eahead)
 	{
 		super(sb);
 		int pos = 0;
 		unpSize = Raw.readIntLittleEndian(eahead, pos);
 		pos+=4;
-		unpVer |= eahead[pos]&0xff;
+		unpVer = (byte) (eahead[pos]&0xff);
 		pos++;
-		method |= eahead[pos]&0xff;
+		method = (byte) (eahead[pos]&0xff);
 		pos++;
 		EACRC = Raw.readIntLittleEndian(eahead, pos);
 	}
@@ -80,8 +75,9 @@ extends SubBlockHeader
 	public byte getUnpVer() {
 		return unpVer;
 	}
-	
-	public void print()
+
+	@Override
+  public void print()
 	{
 		super.print();
 		logger.info("unpSize: "+unpSize);

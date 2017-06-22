@@ -5,22 +5,22 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
- * 
+ *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.unpack.ppm;
 
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
@@ -39,7 +39,7 @@ public class StateRef {
 		return symbol;
 	}
 
-	public void setSymbol(int symbol) {
+	public void setSymbol(final int symbol) {
 		this.symbol = symbol&0xff;
 	}
 
@@ -47,38 +47,39 @@ public class StateRef {
 		return freq;
 	}
 
-	public void setFreq(int freq) {
+	public void setFreq(final int freq) {
 		this.freq = freq&0xff;
 	}
 
-    public void incFreq(int dFreq) {
+    public void incFreq(final int dFreq) {
         freq = (freq + dFreq)&0xff;
     }
 
-    public void decFreq(int dFreq) {
+    public void decFreq(final int dFreq) {
         freq = (freq - dFreq)&0xff;
     }
 
-	public void setValues(State statePtr){
+	public void setValues(final State statePtr){
 		setFreq(statePtr.getFreq());
 		setSuccessor(statePtr.getSuccessor());
 		setSymbol(statePtr.getSymbol());
 	}
-	
+
 	public int getSuccessor() {
 		return successor;
 	}
 
-	public void setSuccessor(PPMContext successor) {
+	public void setSuccessor(final PPMContext successor) {
 		setSuccessor(successor.getAddress());
 	}
 
-	public void setSuccessor(int successor) {
+	public void setSuccessor(final int successor) {
 		this.successor = successor;
 	}
 
+    @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("State[");
         buffer.append("\n  symbol=");
         buffer.append(getSymbol());

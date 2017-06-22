@@ -5,15 +5,15 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
- * 
+ *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.unpack.ppm;
 
@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
@@ -39,8 +39,8 @@ public class SubAllocator {
     private int subAllocatorSize;
 
     // byte Indx2Units[N_INDEXES], Units2Indx[128], GlueCount;
-    private int[] indx2Units = new int[N_INDEXES];
-    private int[] units2Indx = new int[128];
+    private final int[] indx2Units = new int[N_INDEXES];
+    private final int[] units2Indx = new int[128];
     private int glueCount;
 
     // byte *HeapStart,*LoUnit, *HiUnit;
@@ -71,8 +71,8 @@ public class SubAllocator {
 	subAllocatorSize = 0;
     }
 
-    private void insertNode(int p/* rarnode ptr */, int indx) {
-	RarNode temp = tempRarNode;
+    private void insertNode(final int p/* rarnode ptr */, final int indx) {
+	final RarNode temp = tempRarNode;
 	temp.setAddress(p);
 	temp.setNext(freeList[indx].getNext());
 	freeList[indx].setNext(temp);
@@ -82,24 +82,24 @@ public class SubAllocator {
 	pText++;
     }
 
-    private int removeNode(int indx) {
-	int retVal = freeList[indx].getNext();
-	RarNode temp = tempRarNode;
+    private int removeNode(final int indx) {
+	final int retVal = freeList[indx].getNext();
+	final RarNode temp = tempRarNode;
 	temp.setAddress(retVal);
 	freeList[indx].setNext(temp.getNext());
 	return retVal;
     }
 
-    private int U2B(int NU) {
+    private int U2B(final int NU) {
 	return /* 8*NU+4*NU */UNIT_SIZE * NU;
     }
 
     /* memblockptr */
-    private int MBPtr(int BasePtr, int Items) {
+    private int MBPtr(final int BasePtr, final int Items) {
 	return (BasePtr + U2B(Items));
     }
 
-    private void splitBlock(int pv/* ptr */, int oldIndx, int newIndx) {
+    private void splitBlock(final int pv/* ptr */, final int oldIndx, final int newIndx) {
 	int i, uDiff = indx2Units[oldIndx] - indx2Units[newIndx];
 	int p = pv + U2B(indx2Units[newIndx]);
 	if (indx2Units[i = units2Indx[uDiff - 1]] != uDiff) {
@@ -128,13 +128,13 @@ public class SubAllocator {
 	return subAllocatorSize;
     };
 
-    public boolean startSubAllocator(int SASize) {
-	int t = SASize << 20;
+    public boolean startSubAllocator(final int SASize) {
+	final int t = SASize << 20;
 	if (subAllocatorSize == t) {
 	    return true;
 	}
 	stopSubAllocator();
-	int allocSize = t / FIXED_UNIT_SIZE * UNIT_SIZE + UNIT_SIZE;
+	final int allocSize = t / FIXED_UNIT_SIZE * UNIT_SIZE + UNIT_SIZE;
 
 	// adding space for freelist (needed for poiters)
 	// 1+ for null pointer
@@ -168,10 +168,10 @@ public class SubAllocator {
     }
 
     private void glueFreeBlocks() {
-	RarMemBlock s0 = tempRarMemBlock1;
+	final RarMemBlock s0 = tempRarMemBlock1;
 	s0.setAddress(tempMemBlockPos);
-	RarMemBlock p = tempRarMemBlock2;
-	RarMemBlock p1 = tempRarMemBlock3;
+	final RarMemBlock p = tempRarMemBlock2;
+	final RarMemBlock p1 = tempRarMemBlock3;
 	int i, k, sz;
 	if (loUnit != hiUnit) {
 	    heap[loUnit] = 0;
@@ -213,7 +213,7 @@ public class SubAllocator {
 	}
     }
 
-    private int allocUnitsRare(int indx) {
+    private int allocUnitsRare(final int indx) {
 	if (glueCount == 0) {
 	    glueCount = 255;
 	    glueFreeBlocks();
@@ -226,7 +226,7 @@ public class SubAllocator {
 	    if (++i == N_INDEXES) {
 		glueCount--;
 		i = U2B(indx2Units[indx]);
-		int j = FIXED_UNIT_SIZE * indx2Units[indx];
+		final int j = FIXED_UNIT_SIZE * indx2Units[indx];
 		if (fakeUnitsStart - pText > j) {
 		    fakeUnitsStart -= j;
 		    unitsStart -= i;
@@ -235,17 +235,17 @@ public class SubAllocator {
 		return (0);
 	    }
 	} while (freeList[i].getNext() == 0);
-	int retVal = removeNode(i);
+	final int retVal = removeNode(i);
 	splitBlock(retVal, i, indx);
 	return retVal;
     }
 
-    public int allocUnits(int NU) {
-	int indx = units2Indx[NU - 1];
+    public int allocUnits(final int NU) {
+	final int indx = units2Indx[NU - 1];
 	if (freeList[indx].getNext() != 0) {
 	    return removeNode(indx);
 	}
-	int retVal = loUnit;
+	final int retVal = loUnit;
 	loUnit += U2B(indx2Units[indx]);
 	if (loUnit <= hiUnit) {
 	    return retVal;
@@ -263,13 +263,13 @@ public class SubAllocator {
 	return allocUnitsRare(0);
     }
 
-    public int expandUnits(int oldPtr, int OldNU) {
-	int i0 = units2Indx[OldNU - 1];
-	int i1 = units2Indx[OldNU - 1 + 1];
+    public int expandUnits(final int oldPtr, final int OldNU) {
+	final int i0 = units2Indx[OldNU - 1];
+	final int i1 = units2Indx[OldNU - 1 + 1];
 	if (i0 == i1) {
 	    return oldPtr;
 	}
-	int ptr = allocUnits(OldNU + 1);
+	final int ptr = allocUnits(OldNU + 1);
 	if (ptr != 0) {
 	    // memcpy(ptr,OldPtr,U2B(OldNU));
 	    System.arraycopy(heap, oldPtr, heap, ptr, U2B(OldNU));
@@ -278,16 +278,16 @@ public class SubAllocator {
 	return ptr;
     }
 
-    public int shrinkUnits(int oldPtr, int oldNU, int newNU) {
+    public int shrinkUnits(final int oldPtr, final int oldNU, final int newNU) {
 	// System.out.println("SubAllocator.shrinkUnits(" + OldPtr + ", " +
 	// OldNU + ", " + NewNU + ")");
-	int i0 = units2Indx[oldNU - 1];
-	int i1 = units2Indx[newNU - 1];
+	final int i0 = units2Indx[oldNU - 1];
+	final int i1 = units2Indx[newNU - 1];
 	if (i0 == i1) {
 	    return oldPtr;
 	}
 	if (freeList[i1].getNext() != 0) {
-	    int ptr = removeNode(i1);
+	    final int ptr = removeNode(i1);
 	    // memcpy(ptr,OldPtr,U2B(NewNU));
 	    // for (int i = 0; i < U2B(NewNU); i++) {
 	    // heap[ptr + i] = heap[OldPtr + i];
@@ -301,7 +301,7 @@ public class SubAllocator {
 	}
     }
 
-    public void freeUnits(int ptr, int OldNU) {
+    public void freeUnits(final int ptr, final int OldNU) {
 	insertNode(ptr, units2Indx[OldNU - 1]);
     }
 
@@ -309,7 +309,7 @@ public class SubAllocator {
 	return fakeUnitsStart;
     }
 
-    public void setFakeUnitsStart(int fakeUnitsStart) {
+    public void setFakeUnitsStart(final int fakeUnitsStart) {
 	this.fakeUnitsStart = fakeUnitsStart;
     }
 
@@ -321,11 +321,11 @@ public class SubAllocator {
 	return pText;
     }
 
-    public void setPText(int text) {
+    public void setPText(final int text) {
 	pText = text;
     }
 
-    public void decPText(int dPText) {
+    public void decPText(final int dPText) {
 	setPText(getPText() - dPText);
     }
 
@@ -333,7 +333,7 @@ public class SubAllocator {
 	return unitsStart;
     }
 
-    public void setUnitsStart(int unitsStart) {
+    public void setUnitsStart(final int unitsStart) {
 	this.unitsStart = unitsStart;
     }
 
@@ -345,11 +345,11 @@ public class SubAllocator {
 
 	pText = heapStart;
 
-	int size2 = FIXED_UNIT_SIZE
+	final int size2 = FIXED_UNIT_SIZE
 		* (subAllocatorSize / 8 / FIXED_UNIT_SIZE * 7);
-	int realSize2 = size2 / FIXED_UNIT_SIZE * UNIT_SIZE;
-	int size1 = subAllocatorSize - size2;
-	int realSize1 = size1 / FIXED_UNIT_SIZE * UNIT_SIZE + size1
+	final int realSize2 = size2 / FIXED_UNIT_SIZE * UNIT_SIZE;
+	final int size1 = subAllocatorSize - size2;
+	final int realSize1 = size1 / FIXED_UNIT_SIZE * UNIT_SIZE + size1
 		% FIXED_UNIT_SIZE;
 	hiUnit = heapStart + subAllocatorSize;
 	loUnit = unitsStart = heapStart + realSize1;
@@ -403,8 +403,9 @@ public class SubAllocator {
     // }
 
     // Debug
+    @Override
     public String toString() {
-	StringBuilder buffer = new StringBuilder();
+	final StringBuilder buffer = new StringBuilder();
 	buffer.append("SubAllocator[");
 	buffer.append("\n  subAllocatorSize=");
 	buffer.append(subAllocatorSize);

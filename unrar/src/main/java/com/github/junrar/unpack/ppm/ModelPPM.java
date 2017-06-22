@@ -5,15 +5,15 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
- * 
+ *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.unpack.ppm;
 
@@ -26,7 +26,7 @@ import com.github.junrar.unpack.Unpack;
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
@@ -46,7 +46,7 @@ public class ModelPPM
 
 	public static final int MAX_FREQ = 124;
 
-	private SEE2Context[][] SEE2Cont = new SEE2Context[25][16];
+	private final SEE2Context[][] SEE2Cont = new SEE2Context[25][16];
 
 	private SEE2Context dummySEE2Cont;
 
@@ -56,22 +56,22 @@ public class ModelPPM
 
 	private int numMasked, initEsc, orderFall, maxOrder, runLength, initRL;
 
-	private int[] charMask = new int[256];
+	private final int[] charMask = new int[256];
 
-	private int[] NS2Indx = new int[256];
+	private final int[] NS2Indx = new int[256];
 
-	private int[] NS2BSIndx = new int[256];
+	private final int[] NS2BSIndx = new int[256];
 
-	private int[] HB2Flag = new int[256];
+	private final int[] HB2Flag = new int[256];
 
     // byte EscCount, PrevSuccess, HiBitsFlag;
 	private int escCount, prevSuccess, hiBitsFlag;
 
-	private int[][] binSumm = new int[128][64]; // binary SEE-contexts
+	private final int[][] binSumm = new int[128][64]; // binary SEE-contexts
 
-	private RangeCoder coder = new RangeCoder();
+	private final RangeCoder coder = new RangeCoder();
 
-	private SubAllocator subAlloc = new SubAllocator();
+	private final SubAllocator subAlloc = new SubAllocator();
 
 	private static int InitBinEsc[] = { 0x3CDD, 0x1F3F, 0x59BF, 0x48F3,
 			0x64A1, 0x5ABC, 0x6632, 0x6051 };
@@ -113,12 +113,12 @@ public class ModelPPM
 		orderFall = maxOrder;
 		minContext.setNumStats(256);
 		minContext.getFreqData().setSummFreq(minContext.getNumStats()+1);
-				
+
 		addr = subAlloc.allocUnits(256 / 2);
 		foundState.setAddress(addr);
 		minContext.getFreqData().setStats(addr);
 
-		State state = new State(subAlloc.getHeap());
+		final State state = new State(subAlloc.getHeap());
 		addr = minContext.getFreqData().getStats();
         runLength = initRL;
         prevSuccess = 0;
@@ -143,7 +143,7 @@ public class ModelPPM
 		}
 	}
 
-	private void startModelRare(int MaxOrder)
+	private void startModelRare(final int MaxOrder)
 	{
         int i, k, m, Step;
 		escCount = 1;
@@ -184,12 +184,12 @@ public class ModelPPM
 		Arrays.fill(charMask, 0);
 	}
 
-	public boolean decodeInit(Unpack unpackRead, int escChar/* ref */)
+	public boolean decodeInit(final Unpack unpackRead, int escChar/* ref */)
 			throws IOException, RarException
 	{
 
 		int MaxOrder = unpackRead.getChar() & 0xff;
-		boolean reset = ((MaxOrder & 0x20) != 0);
+		final boolean reset = ((MaxOrder & 0x20) != 0);
 
 		int MaxMB = 0;
 		if (reset) {
@@ -266,10 +266,10 @@ public class ModelPPM
 			}
 			coder.decode();
 		}
-		int Symbol = foundState.getSymbol();
+		final int Symbol = foundState.getSymbol();
 		if ((orderFall == 0) && foundState.getSuccessor() > subAlloc.getPText()) {
 			// MinContext=MaxContext=FoundState->Successor;
-			int addr = foundState.getSuccessor();
+			final int addr = foundState.getSuccessor();
 			minContext.setAddress(addr);
 			maxContext.setAddress(addr);
 		} else {
@@ -298,7 +298,7 @@ public class ModelPPM
 		return initRL;
 	}
 
-	public void setEscCount(int escCount)
+	public void setEscCount(final int escCount)
 	{
 		this.escCount = escCount&0xff;
 	}
@@ -308,7 +308,7 @@ public class ModelPPM
 		return escCount;
 	}
 
-    public void incEscCount(int dEscCount) {
+    public void incEscCount(final int dEscCount) {
         setEscCount(getEscCount() + dEscCount);
     }
 
@@ -322,12 +322,12 @@ public class ModelPPM
 		return numMasked;
 	}
 
-	public void setNumMasked(int numMasked)
+	public void setNumMasked(final int numMasked)
 	{
 		this.numMasked = numMasked;
 	}
 
-	public void setPrevSuccess(int prevSuccess)
+	public void setPrevSuccess(final int prevSuccess)
 	{
 		this.prevSuccess = prevSuccess&0xff;
 	}
@@ -337,12 +337,12 @@ public class ModelPPM
 		return initEsc;
 	}
 
-	public void setInitEsc(int initEsc)
+	public void setInitEsc(final int initEsc)
 	{
 		this.initEsc = initEsc;
 	}
 
-	public void setRunLength(int runLength)
+	public void setRunLength(final int runLength)
 	{
 		this.runLength = runLength;
 	}
@@ -352,7 +352,7 @@ public class ModelPPM
 		return runLength;
 	}
 
-    public void incRunLength(int dRunLength) {
+    public void incRunLength(final int dRunLength) {
         setRunLength(getRunLength() + dRunLength);
     }
 
@@ -366,7 +366,7 @@ public class ModelPPM
 		return hiBitsFlag;
 	}
 
-	public void setHiBitsFlag(int hiBitsFlag)
+	public void setHiBitsFlag(final int hiBitsFlag)
 	{
 		this.hiBitsFlag = hiBitsFlag&0xff;
 	}
@@ -411,20 +411,20 @@ public class ModelPPM
 		return orderFall;
 	}
 
-	private int /* ppmcontext ptr */createSuccessors(boolean Skip,
-            State p1 /* state ptr */) {
+	private int /* ppmcontext ptr */createSuccessors(final boolean Skip,
+            final State p1 /* state ptr */) {
 		//State upState = tempState1.init(null);
-		StateRef upState = tempStateRef2;
-		State tempState = tempState1.init(getHeap());
+		final StateRef upState = tempStateRef2;
+		final State tempState = tempState1.init(getHeap());
 
 		// PPM_CONTEXT* pc=MinContext, * UpBranch=FoundState->Successor;
-		PPMContext pc = tempPPMContext1.init(getHeap());
+		final PPMContext pc = tempPPMContext1.init(getHeap());
 		pc.setAddress(minContext.getAddress());
-		PPMContext upBranch = tempPPMContext2.init(getHeap());
+		final PPMContext upBranch = tempPPMContext2.init(getHeap());
 		upBranch.setAddress(foundState.getSuccessor());
 
 		// STATE * p, * ps[MAX_O], ** pps=ps;
-		State p = tempState2.init(getHeap());
+		final State p = tempState2.init(getHeap());
 		int pps = 0;
 
 		boolean noLoop = false;
@@ -482,8 +482,8 @@ public class ModelPPM
 					p.incAddress();
 				} while (p.getSymbol() != upState.getSymbol());
 			}
-			int cf = p.getFreq() - 1;
-			int s0 = pc.getFreqData().getSummFreq() - pc.getNumStats() - cf;
+			final int cf = p.getFreq() - 1;
+			final int s0 = pc.getFreqData().getSummFreq() - pc.getNumStats() - cf;
 			// UpState.Freq=1+((2*cf <= s0)?(5*cf > s0):((2*cf+3*s0-1)/(2*s0)));
 			upState.setFreq(1 + ((2 * cf <= s0) ? (5 * cf > s0 ? 1 : 0) :
                     ((2 * cf + 3 * s0 - 1) / (2 * s0))));
@@ -511,13 +511,13 @@ public class ModelPPM
 	{
         //System.out.println("ModelPPM.updateModel()");
 		// STATE fs = *FoundState, *p = NULL;
-		StateRef fs = tempStateRef1;
+		final StateRef fs = tempStateRef1;
 		fs.setValues(foundState);
-		State p = tempState3.init(getHeap());
-		State tempState = tempState4.init(getHeap());
+		final State p = tempState3.init(getHeap());
+		final State tempState = tempState4.init(getHeap());
 
-		PPMContext pc = tempPPMContext3.init(getHeap());
-		PPMContext successor = tempPPMContext4.init(getHeap());
+		final PPMContext pc = tempPPMContext3.init(getHeap());
+		final PPMContext successor = tempPPMContext4.init(getHeap());
 
 		int ns1, ns, cf, sf, s0;
 		pc.setAddress(minContext.getSuffix());
@@ -605,7 +605,7 @@ public class ModelPPM
 //				int sum = ((2 * ns1 < ns) ? 1 : 0) +
 //                        2 * ((4 * ((ns1 <= ns) ? 1 : 0)) & ((pc.getFreqData()
 //								.getSummFreq() <= 8 * ns1) ? 1 : 0));
-				int sum = ((2 * ns1 < ns) ? 1 : 0) + 2 * (
+				final int sum = ((2 * ns1 < ns) ? 1 : 0) + 2 * (
                         ((4 * ns1 <= ns) ? 1 : 0) &
                         ((pc.getFreqData().getSummFreq() <= 8 * ns1) ? 1 : 0)
                         );
@@ -645,8 +645,8 @@ public class ModelPPM
 			p.setFreq(cf);
 			pc.setNumStats(++ns1);
 		}
-		
-		int address = fs.getSuccessor();
+
+		final int address = fs.getSuccessor();
 		maxContext.setAddress(address);
 		minContext.setAddress(address);
 		//TODO-----debug
@@ -660,8 +660,9 @@ public class ModelPPM
 	}
 
     // Debug
+    @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("ModelPPM[");
         buffer.append("\n  numMasked=");
         buffer.append(numMasked);

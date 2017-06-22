@@ -5,16 +5,16 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
  *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.rarfile;
 
@@ -32,13 +32,13 @@ import com.github.junrar.io.Raw;
  * @version $LastChangedRevision$
  */
 public class BaseBlock{
-	
-	Log logger = LogFactory.getLog(BaseBlock.class.getName());
-	
+
+	final Log logger = LogFactory.getLog(getClass ().getName());
+
 	public static final short BaseBlockSize = 7;
-	
+
 	//TODO move somewhere else
-	
+
 	public static final short MHD_VOLUME = 0x0001;
 	public static final short MHD_COMMENT = 0x0002;
 	public static final short MHD_LOCK = 0x0004;
@@ -50,8 +50,8 @@ public class BaseBlock{
 	public static final short MHD_PASSWORD = 0x0080;
 	public static final short MHD_FIRSTVOLUME = 0x0100;
 	public static final short MHD_ENCRYPTVER = 0x0200;
-	
-	
+
+
 	public static final short LHD_SPLIT_BEFORE =  0x0001;
 	public static final short LHD_SPLIT_AFTER  =  0x0002;
 	public static final short LHD_PASSWORD     =  0x0004;
@@ -82,31 +82,31 @@ public class BaseBlock{
 	public static final short EARC_DATACRC     =  0x0002;
 	public static final short EARC_REVSPACE    =  0x0004;
 	public static final short EARC_VOLNUMBER   =  0x0008;
-	
-	
+
+
 	protected long positionInFile;
-	
+
 	protected short headCRC = 0;
 	protected byte headerType = 0;
 	protected short flags = 0;
 	protected short headerSize = 0 ;
 
 	/**
-	 * 
+	 *
 	 */
 	public BaseBlock(){
-		
+
 	}
-	
-	public BaseBlock(BaseBlock bb){
+
+	public BaseBlock(final BaseBlock bb){
 		this.flags = bb.getFlags();
     	this.headCRC = bb.getHeadCRC();
     	this.headerType = bb.getHeaderType().getHeaderByte();
     	this.headerSize = bb.getHeaderSize();
     	this.positionInFile = bb.getPositionInFile();
 	}
-	public BaseBlock(byte[] baseBlockHeader){
-		
+	public BaseBlock(final byte[] baseBlockHeader){
+
 		int pos = 0;
 		this.headCRC = Raw.readShortLittleEndian(baseBlockHeader, pos);
 		pos+=2;
@@ -116,20 +116,20 @@ public class BaseBlock{
 		pos+=2;
 		this.headerSize = Raw.readShortLittleEndian(baseBlockHeader, pos);
 	}
-	
-	
+
+
 	public boolean hasArchiveDataCRC(){
 		return (this.flags & EARC_DATACRC)!=0;
 	}
-	
+
 	public boolean hasVolumeNumber(){
 		return (this.flags & EARC_VOLNUMBER)!=0;
 	}
-	
+
 	public boolean hasEncryptVersion(){
 		return (flags & MHD_ENCRYPTVER)!=0;
 	}
-	
+
 	/**
 	 * @return is it a sub block
 	 */
@@ -143,7 +143,7 @@ public class BaseBlock{
 			 return(true);
 		 }
 		 return(false);
-		
+
 	}
 
 	public long getPositionInFile() {
@@ -157,7 +157,7 @@ public class BaseBlock{
 	public short getHeadCRC() {
 		return headCRC;
 	}
-	
+
 	public short getHeaderSize() {
 		return headerSize;
 	}
@@ -165,13 +165,13 @@ public class BaseBlock{
 	public UnrarHeadertype getHeaderType() {
 		return UnrarHeadertype.findType(headerType);
 	}
-	
-	public void setPositionInFile(long positionInFile) {
+
+	public void setPositionInFile(final long positionInFile) {
 		this.positionInFile = positionInFile;
 	}
-	
+
 	public void print(){
-		StringBuilder str  =new StringBuilder();
+		final StringBuilder str  =new StringBuilder();
 		str.append("HeaderType: " + getHeaderType());
 		str.append("\nHeadCRC: "+Integer.toHexString(getHeadCRC()));
 		str.append("\nFlags: "+Integer.toHexString(getFlags()));

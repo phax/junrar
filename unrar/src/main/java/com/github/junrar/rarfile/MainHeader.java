@@ -5,52 +5,48 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
  *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.rarfile;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.github.junrar.io.Raw;
 
 
 /**
- * The main header of an rar archive. holds information concerning the whole archive (solid, encrypted etc). 
+ * The main header of an rar archive. holds information concerning the whole archive (solid, encrypted etc).
  *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
 public class MainHeader extends BaseBlock {
-	private Log logger = LogFactory.getLog(MainHeader.class.getName());
 	public static final short mainHeaderSizeWithEnc = 7;
 	public static final short mainHeaderSize = 6;
-	private short highPosAv;
-	private int posAv;
+	private final short highPosAv;
+	private final int posAv;
 	private byte encryptVersion;
-	
-	public MainHeader(BaseBlock bb, byte[] mainHeader) {
+
+	public MainHeader(final BaseBlock bb, final byte[] mainHeader) {
 		super(bb);
 		int pos = 0;
 		highPosAv = Raw.readShortLittleEndian(mainHeader, pos);
 		pos += 2;
 		posAv = Raw.readIntLittleEndian(mainHeader, pos);
 		pos+=4;
-		
+
 		if(hasEncryptVersion()){
 			encryptVersion |= mainHeader[pos]&0xff;
 		}
 	}
-	
+
 	/**
 	 * old cmt block is present
 	 * @return true if has cmt block
@@ -59,29 +55,29 @@ public class MainHeader extends BaseBlock {
 		return (this.flags & BaseBlock.MHD_COMMENT)!=0;
 	}
 	/**
-	 * the version the the encryption 
+	 * the version the the encryption
 	 * @return
 	 */
 	public byte getEncryptVersion() {
 		return encryptVersion;
 	}
-	
+
 	public short getHighPosAv() {
 		return highPosAv;
 	}
-	
+
 	public int getPosAv() {
 		return posAv;
 	}
-	
+
 	/**
-	 * returns whether the archive is encrypted 
+	 * returns whether the archive is encrypted
 	 * @return
 	 */
 	public boolean isEncrypted(){
 		return (this.flags & BaseBlock.MHD_PASSWORD)!=0;
 	}
-	
+
 	/**
 	 * return whether the archive is a multivolume archive
 	 * @return
@@ -89,7 +85,7 @@ public class MainHeader extends BaseBlock {
 	public boolean isMultiVolume(){
 		return (this.flags & BaseBlock.MHD_VOLUME)!=0;
 	}
-	
+
 	/**
 	 * if the archive is a multivolume archive this method returns whether this instance is the first part of the multivolume archive
 	 * @return
@@ -97,10 +93,11 @@ public class MainHeader extends BaseBlock {
 	public boolean isFirstVolume(){
 		return (this.flags & BaseBlock.MHD_FIRSTVOLUME)!=0;
 	}
-	
-	public void print(){
+
+	@Override
+  public void print(){
 		super.print();
-		StringBuilder str=new StringBuilder();
+		final StringBuilder str=new StringBuilder();
 		str.append("posav: "+getPosAv());
 		str.append("\nhighposav: "+getHighPosAv());
 		str.append("\nhasencversion: "+hasEncryptVersion()+(hasEncryptVersion()?getEncryptVersion():""));
@@ -114,7 +111,7 @@ public class MainHeader extends BaseBlock {
 		str.append("\nisAV: "+isAV());
 		logger.info(str.toString());
 	}
-	
+
 	/**
 	 * returns whether this archive is solid. in this case you can only extract all file at once
 	 * @return
@@ -122,15 +119,15 @@ public class MainHeader extends BaseBlock {
 	public boolean isSolid(){
 		return (this.flags&MHD_SOLID)!=0;
 	}
-	
+
 	public boolean isLocked(){
 		return (this.flags&MHD_LOCK)!=0;
 	}
-	
+
 	public boolean isProtected(){
 		return (this.flags&MHD_PROTECT)!=0;
 	}
-	
+
 	public boolean isAV(){
 		return (this.flags&MHD_AV)!=0;
 	}

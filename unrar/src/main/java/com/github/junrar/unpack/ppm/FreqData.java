@@ -5,15 +5,15 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
- * 
+ *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.unpack.ppm;
 
@@ -21,13 +21,13 @@ import com.github.junrar.io.Raw;
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
 public class FreqData extends Pointer{
 
-	public static final int size = 6; 
+	public static final int size = 6;
 
 //    struct FreqData
 //    {
@@ -35,11 +35,11 @@ public class FreqData extends Pointer{
 //        STATE _PACK_ATTR * Stats;
 //    };
 
-	public FreqData(byte[]mem){
+	public FreqData(final byte[]mem){
 		super(mem);
 	}
 
-    public FreqData init(byte[] mem) {
+    public FreqData init(final byte[] mem) {
         this.mem = mem;
         pos = 0;
         return this;
@@ -49,11 +49,11 @@ public class FreqData extends Pointer{
 		return Raw.readShortLittleEndian(mem,  pos)&0xffff;
 	}
 
-	public void setSummFreq(int summFreq) {
+	public void setSummFreq(final int summFreq) {
         Raw.writeShortLittleEndian(mem, pos, (short)summFreq);
 	}
 
-    public void incSummFreq(int dSummFreq) {
+    public void incSummFreq(final int dSummFreq) {
         Raw.incShortLittleEndian(mem, pos, dSummFreq);
     }
 
@@ -61,16 +61,17 @@ public class FreqData extends Pointer{
         return Raw.readIntLittleEndian(mem,  pos+2);
 	}
 
-	public void setStats(State state) {
+	public void setStats(final State state) {
 		setStats(state.getAddress());
 	}
 
-    public void setStats(int state) {
+    public void setStats(final int state) {
         Raw.writeIntLittleEndian(mem, pos+2, state);
 	}
 
+    @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("FreqData[");
         buffer.append("\n  pos=");
         buffer.append(pos);
@@ -83,5 +84,5 @@ public class FreqData extends Pointer{
         buffer.append("\n]");
         return buffer.toString();
     }
-	
+
 }

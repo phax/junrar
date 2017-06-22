@@ -5,37 +5,32 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
  *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.rarfile;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.github.junrar.io.Raw;
 
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
 public class FileHeader extends BlockHeader {
-
-    private final Log logger = LogFactory.getLog(FileHeader.class.getName());
 
     private static final byte SALT_SIZE = 8;
 
@@ -49,9 +44,9 @@ public class FileHeader extends BlockHeader {
 
     private final int fileTime;
 
-    private byte unpVersion;
+    private final byte unpVersion;
 
-    private byte unpMethod;
+    private final byte unpMethod;
 
     private short nameSize;
 
@@ -86,7 +81,7 @@ public class FileHeader extends BlockHeader {
 
     private int recoverySectors = -1;
 
-    public FileHeader(BlockHeader bh, byte[] fileHeader) {
+    public FileHeader(final BlockHeader bh, final byte[] fileHeader) {
 	super(bh);
 
 	int position = 0;
@@ -101,9 +96,9 @@ public class FileHeader extends BlockHeader {
 	fileTime = Raw.readIntLittleEndian(fileHeader, position);
 	position += 4;
 
-	unpVersion |= fileHeader[13] & 0xff;
+	unpVersion = (byte) (fileHeader[13] & 0xff);
 	position++;
-	unpMethod |= fileHeader[14] & 0xff;
+	unpMethod = (byte) (fileHeader[14] & 0xff);
 	position++;
 	nameSize = Raw.readShortLittleEndian(fileHeader, position);
 	position += 2;
@@ -151,7 +146,7 @@ public class FileHeader extends BlockHeader {
 			&& fileNameBytes[length] != 0) {
 		    length++;
 		}
-		byte[] name = new byte[length];
+		final byte[] name = new byte[length];
 		System.arraycopy(fileNameBytes, 0, name, 0, name.length);
 		fileName = new String(name);
 		if (length != nameSize) {
@@ -197,7 +192,7 @@ public class FileHeader extends BlockHeader {
     @Override
     public void print() {
 	super.print();
-	StringBuilder str = new StringBuilder();
+	final StringBuilder str = new StringBuilder();
 	str.append("unpSize: " + getUnpSize());
 	str.append("\nHostOS: " + hostOS.name());
 	str.append("\nMDate: " + mTime);
@@ -222,8 +217,8 @@ public class FileHeader extends BlockHeader {
 	logger.info(str.toString());
     }
 
-    private Date getDateDos(int time) {
-	Calendar cal = Calendar.getInstance();
+    private Date getDateDos(final int time) {
+	final Calendar cal = Calendar.getInstance();
 	cal.set(Calendar.YEAR, (time >>> 25) + 1980);
 	cal.set(Calendar.MONTH, ((time >>> 21) & 0x0f) - 1);
 	cal.set(Calendar.DAY_OF_MONTH, (time >>> 16) & 0x1f);
@@ -237,7 +232,7 @@ public class FileHeader extends BlockHeader {
 	return arcTime;
     }
 
-    public void setArcTime(Date arcTime) {
+    public void setArcTime(final Date arcTime) {
 	this.arcTime = arcTime;
     }
 
@@ -245,7 +240,7 @@ public class FileHeader extends BlockHeader {
 	return aTime;
     }
 
-    public void setATime(Date time) {
+    public void setATime(final Date time) {
 	aTime = time;
     }
 
@@ -253,7 +248,7 @@ public class FileHeader extends BlockHeader {
 	return cTime;
     }
 
-    public void setCTime(Date time) {
+    public void setCTime(final Date time) {
 	cTime = time;
     }
 
@@ -261,7 +256,7 @@ public class FileHeader extends BlockHeader {
 	return fileAttr;
     }
 
-    public void setFileAttr(int fileAttr) {
+    public void setFileAttr(final int fileAttr) {
 	this.fileAttr = fileAttr;
     }
 
@@ -277,7 +272,7 @@ public class FileHeader extends BlockHeader {
 	return fileName;
     }
 
-    public void setFileName(String fileName) {
+    public void setFileName(final String fileName) {
 	this.fileName = fileName;
     }
 
@@ -285,7 +280,7 @@ public class FileHeader extends BlockHeader {
 	return fileNameW;
     }
 
-    public void setFileNameW(String fileNameW) {
+    public void setFileNameW(final String fileNameW) {
 	this.fileNameW = fileNameW;
     }
 
@@ -305,7 +300,7 @@ public class FileHeader extends BlockHeader {
 	return mTime;
     }
 
-    public void setMTime(Date time) {
+    public void setMTime(final Date time) {
 	mTime = time;
     }
 
@@ -356,16 +351,16 @@ public class FileHeader extends BlockHeader {
 
     /**
      * the file will be continued in the next archive part
-     * 
+     *
      * @return
      */
     public boolean isSplitAfter() {
-	return (this.flags & BlockHeader.LHD_SPLIT_AFTER) != 0;
+	return (this.flags & LHD_SPLIT_AFTER) != 0;
     }
 
     /**
      * the file is continued in this archive
-     * 
+     *
      * @return
      */
     public boolean isSplitBefore() {
@@ -374,7 +369,7 @@ public class FileHeader extends BlockHeader {
 
     /**
      * this file is compressed as solid (all files handeled as one)
-     * 
+     *
      * @return
      */
     public boolean isSolid() {
@@ -383,16 +378,16 @@ public class FileHeader extends BlockHeader {
 
     /**
      * the file is encrypted
-     * 
+     *
      * @return
      */
     public boolean isEncrypted() {
-	return (this.flags & BlockHeader.LHD_PASSWORD) != 0;
+	return (this.flags & LHD_PASSWORD) != 0;
     }
 
     /**
      * the filename is also present in unicode
-     * 
+     *
      * @return
      */
     public boolean isUnicode() {
@@ -413,7 +408,7 @@ public class FileHeader extends BlockHeader {
 
     /**
      * whether this fileheader represents a directory
-     * 
+     *
      * @return
      */
     public boolean isDirectory() {

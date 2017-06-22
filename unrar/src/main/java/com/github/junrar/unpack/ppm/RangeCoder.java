@@ -5,15 +5,15 @@
  *
  * Source: $HeadURL$
  * Last changed: $LastChangedDate$
- * 
- * the unrar licence applies to all junrar source and binary distributions 
+ *
+ * the unrar licence applies to all junrar source and binary distributions
  * you are not allowed to use this source to re-create the RAR compression algorithm
- * 
+ *
  * Here some html entities which can be used for escaping javadoc tags:
  * "&":  "&#038;" or "&amp;"
  * "<":  "&#060;" or "&lt;"
  * ">":  "&#062;" or "&gt;"
- * "@":  "&#064;" 
+ * "@":  "&#064;"
  */
 package com.github.junrar.unpack.ppm;
 
@@ -25,7 +25,7 @@ import com.github.junrar.unpack.Unpack;
 
 /**
  * DOCUMENT ME
- * 
+ *
  * @author $LastChangedBy$
  * @version $LastChangedRevision$
  */
@@ -49,7 +49,7 @@ public class RangeCoder
 		return subRange;
 	}
 
-	public void initDecoder(Unpack unpackRead) throws IOException, RarException
+	public void initDecoder(final Unpack unpackRead) throws IOException, RarException
 	{
 		this.unpackRead = unpackRead;
 
@@ -66,7 +66,7 @@ public class RangeCoder
 		return (int)((code - low) / (range));
 	}
 
-	public long getCurrentShiftCount(int SHIFT)
+	public long getCurrentShiftCount(final int SHIFT)
 	{
 		range = range >>>SHIFT;
 		return ((code - low) / (range))&uintMask;
@@ -85,7 +85,7 @@ public class RangeCoder
 
 	public void ariDecNormalize() throws IOException, RarException
 	{
-//		while ((low ^ (low + range)) < TOP || range < BOT && ((range = -low & (BOT - 1)) != 0 ? true : true)) 
+//		while ((low ^ (low + range)) < TOP || range < BOT && ((range = -low & (BOT - 1)) != 0 ? true : true))
 //		{
 //			code = ((code << 8) | unpackRead.getChar()&0xff)&uintMask;
 //			range = (range << 8)&uintMask;
@@ -106,8 +106,9 @@ public class RangeCoder
     }
 
     // Debug
+    @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("RangeCoder[");
         buffer.append("\n  low=");
         buffer.append(low);
@@ -131,7 +132,7 @@ public class RangeCoder
 			return highCount;
 		}
 
-		public void setHighCount(long highCount)
+		public void setHighCount(final long highCount)
 		{
 			this.highCount = highCount&uintMask;
 		}
@@ -141,7 +142,7 @@ public class RangeCoder
 			return lowCount&uintMask;
 		}
 
-		public void setLowCount(long lowCount)
+		public void setLowCount(final long lowCount)
 		{
 			this.lowCount = lowCount&uintMask;
 		}
@@ -151,18 +152,19 @@ public class RangeCoder
 			return scale;
 		}
 
-		public void setScale(long scale)
+		public void setScale(final long scale)
 		{
 			this.scale = scale&uintMask;
 		}
 
-        public void incScale(int dScale) {
+        public void incScale(final int dScale) {
             setScale(getScale() + dScale);
         }
-        
+
         // Debug
+        @Override
         public String toString() {
-            StringBuilder buffer = new StringBuilder();
+            final StringBuilder buffer = new StringBuilder();
             buffer.append("SubRange[");
             buffer.append("\n  lowCount=");
             buffer.append(lowCount);
